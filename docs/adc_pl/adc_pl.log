@@ -1,0 +1,240 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.3.12)  26 MAY 2024 23:30
+entering extended mode
+ \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"d:/Semestr 4/Technika mikroprocesorowa lab/MSP430/docs/adc_pl/adc_pl.tex"
+(d:/Semestr 4/Technika mikroprocesorowa lab/MSP430/docs/adc_pl/adc_pl.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-04>
+(C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
+File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count187
+\c@section=\count188
+\c@subsection=\count189
+\c@subsubsection=\count190
+\c@paragraph=\count191
+\c@subparagraph=\count192
+\c@figure=\count193
+\c@table=\count194
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+) (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks17
+\inpenc@posthook=\toks18
+) (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+) (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+ (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks19
+) (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+ (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count195
+\Gm@cntv=\count196
+\c@Gm@tempcnt=\count197
+\Gm@bindingoffset=\dimen141
+\Gm@wd@mp=\dimen142
+\Gm@odd@mp=\dimen143
+\Gm@even@mp=\dimen144
+\Gm@layoutwidth=\dimen145
+\Gm@layoutheight=\dimen146
+\Gm@layouthoffset=\dimen147
+\Gm@layoutvoffset=\dimen148
+\Gm@dimlist=\toks20
+ (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)) (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
+Package: enumitem 2019/06/20 v3.9 Customized lists
+\labelindent=\skip50
+\enit@outerparindent=\dimen149
+\enit@toks=\toks21
+\enit@inbox=\box51
+\enit@count@id=\count198
+\enitdp@description=\count199
+) (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+ (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+ (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+) (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+ (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen150
+\Gin@req@width=\dimen151
+) (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
+File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count266
+\l__pdf_internal_box=\box52
+) (adc_pl.aux)
+\openout1 = `adc_pl.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(36.135pt, 542.02501pt, 36.135pt)
+* v-part:(T,H,B)=(36.135pt, 722.7pt, 36.135pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=542.02501pt
+* \textheight=722.7pt
+* \oddsidemargin=-36.135pt
+* \evensidemargin=-36.135pt
+* \topmargin=-73.135pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count267
+\scratchdimen=\dimen152
+\scratchbox=\box53
+\nofMPsegments=\count268
+\nofMParguments=\count269
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count270
+\MPscratchDim=\dimen153
+\MPnumerator=\count271
+\makeMPintoPDFobject=\count272
+\everyMPtoPDFconversion=\toks23
+) (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 16.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 16.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 16.
+<../adc_img/ADC_delay_DAC_1.png, id=1, 754.017pt x 135.50626pt>
+File: ../adc_img/ADC_delay_DAC_1.png Graphic file (type png)
+<use ../adc_img/ADC_delay_DAC_1.png>
+Package pdftex.def Info: ../adc_img/ADC_delay_DAC_1.png  used on input line 39.
+(pdftex.def)             Requested size: 542.02501pt x 97.40933pt.
+<../adc_img/Schemat_bloki_7.png, id=3, 756.426pt x 523.9575pt>
+File: ../adc_img/Schemat_bloki_7.png Graphic file (type png)
+<use ../adc_img/Schemat_bloki_7.png>
+Package pdftex.def Info: ../adc_img/Schemat_bloki_7.png  used on input line 47.
+(pdftex.def)             Requested size: 542.02501pt x 375.46625pt.
+ [1
+
+{C:/Users/Adrian/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <../adc_img/ADC_delay_DAC_1.png>]
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 53.
+ (C:\Users\Adrian\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
+File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
+) [2 <../adc_img/Schemat_bloki_7.png>]
+<../adc_img/slau049f_346.png, id=25, 479.99326pt x 558.28575pt>
+File: ../adc_img/slau049f_346.png Graphic file (type png)
+<use ../adc_img/slau049f_346.png>
+Package pdftex.def Info: ../adc_img/slau049f_346.png  used on input line 116.
+(pdftex.def)             Requested size: 542.02501pt x 630.50627pt.
+ [3] [4 <../adc_img/slau049f_346.png>]
+<../adc_img/slau049f_364.png, id=33, 389.65575pt x 522.15076pt>
+File: ../adc_img/slau049f_364.png Graphic file (type png)
+<use ../adc_img/slau049f_364.png>
+Package pdftex.def Info: ../adc_img/slau049f_364.png  used on input line 129.
+(pdftex.def)             Requested size: 420.06607pt x 562.94241pt.
+<../adc_img/slau049f_365.png, id=34, 383.63326pt x 396.2805pt>
+File: ../adc_img/slau049f_365.png Graphic file (type png)
+<use ../adc_img/slau049f_365.png>
+Package pdftex.def Info: ../adc_img/slau049f_365.png  used on input line 135.
+(pdftex.def)             Requested size: 474.27188pt x 489.91338pt.
+ [5 <../adc_img/slau049f_364.png>] [6 <../adc_img/slau049f_365.png>]
+<../adc_img/slau049f_366.png, id=43, 386.04225pt x 532.99126pt>
+File: ../adc_img/slau049f_366.png Graphic file (type png)
+<use ../adc_img/slau049f_366.png>
+Package pdftex.def Info: ../adc_img/slau049f_366.png  used on input line 155.
+(pdftex.def)             Requested size: 447.16898pt x 617.40009pt.
+ [7 <../adc_img/slau049f_366.png>]
+<../adc_img/slau049f_367.png, id=49, 383.63326pt x 396.2805pt>
+File: ../adc_img/slau049f_367.png Graphic file (type png)
+<use ../adc_img/slau049f_367.png>
+Package pdftex.def Info: ../adc_img/slau049f_367.png  used on input line 164.
+(pdftex.def)             Requested size: 487.8192pt x 503.90555pt.
+ [8 <../adc_img/slau049f_367.png>]
+<../adc_img/slau049f_368.png, id=54, 389.0535pt x 489.027pt>
+File: ../adc_img/slau049f_368.png Graphic file (type png)
+<use ../adc_img/slau049f_368.png>
+Package pdftex.def Info: ../adc_img/slau049f_368.png  used on input line 176.
+(pdftex.def)             Requested size: 487.8192pt x 613.19995pt.
+ [9 <../adc_img/slau049f_368.png>]
+<../adc_img/Schemat_bloki_8.png, id=59, 752.8125pt x 519.1395pt>
+File: ../adc_img/Schemat_bloki_8.png Graphic file (type png)
+<use ../adc_img/Schemat_bloki_8.png>
+Package pdftex.def Info: ../adc_img/Schemat_bloki_8.png  used on input line 195.
+(pdftex.def)             Requested size: 542.02501pt x 373.80391pt.
+<../adc_img/slau049f_348.png, id=60, 386.04225pt x 481.8pt>
+File: ../adc_img/slau049f_348.png Graphic file (type png)
+<use ../adc_img/slau049f_348.png>
+Package pdftex.def Info: ../adc_img/slau049f_348.png  used on input line 202.
+(pdftex.def)             Requested size: 487.8192pt x 608.8356pt.
+ [10 <../adc_img/Schemat_bloki_8.png>] [11 <../adc_img/slau049f_348.png>] [12] [13] (adc_pl.aux)
+ ***********
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-04>
+ ***********
+ ) 
+Here is how much of TeX's memory you used:
+ 2564 strings out of 474485
+ 42895 string characters out of 5743262
+ 1944542 words of memory out of 5000000
+ 24849 multiletter control sequences out of 15000+600000
+ 570391 words of font info for 59 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 57i,6n,65p,354b,424s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1000.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbi1000.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1000.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1200.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbi1728.pk> <C:\Users\Adrian\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1728.pk>
+Output written on adc_pl.pdf (13 pages, 840089 bytes).
+PDF statistics:
+ 478 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
+
