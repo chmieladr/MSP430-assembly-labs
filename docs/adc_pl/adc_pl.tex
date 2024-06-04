@@ -44,8 +44,8 @@ Wykreśliłem ten element za pomocą przerywanej linii tak, aby oznaczyć, że j
 Nie oznacza to jednak, że to oprogramowanie nie powinno się tam znaleźć w finalnej wersji programu.
 
 \section{Konfiguracja konwerterów DAC}
-\includegraphics[width=\textwidth]{"../adc_img/Schemat_bloki_7.png"}
-\textit{Źródło: Schemat\_bloki.pdf, strona: 7}
+\includegraphics[width=\textwidth]{"../adc_img/Blocks_scheme_7.png"}
+\textit{Źródło: Blocks\_scheme.pdf, strona: 7}
 \vspace{3mm} \\
 Zgodnie z widocznym powyżej schematem konieczna jest konfiguracja portów \textit{P1.4} oraz \textit{P5.7} jako \textbf{wyjściowych} tak, aby możliwe było oglądanie rezultatów na ekranie oscyloskopu po podpięciu go do odpowiednich pinów.
 Oprócz tego konieczne jest ustawienie wszystkich pinów z portu \textit{P2} jako \textbf{wyjściowe}.
@@ -192,8 +192,8 @@ BIS.W #11b, &ADC12CTL0 ; has to be at the end
 \end{enumerate}
 
 \section{Ustawienie przełącznika A1 jako kanał wejściowy}
-\includegraphics[width=\textwidth]{"../adc_img/Schemat_bloki_8.png"}
-\textit{Źródło: Schemat\_bloki.pdf, strona: 8}
+\includegraphics[width=\textwidth]{"../adc_img/Blocks_scheme_8.png"}
+\textit{Źródło: Blocks\_scheme.pdf, strona: 8}
 Częściowo wykonaliśmy już to zadanie w krokach poprzednich, lecz identycznie jak w przypadku konwerterów powyżej, konieczne jest ustawienie pewnych bitów na konkretne wartości.
 W tym przypadku konieczne jest ustawienie portu \textit{P6.1} jako \textbf{wejście analogowe} rejestrem \textit{P6SEL} przy użyciu następującego kodu:
 \begin{verbatim}

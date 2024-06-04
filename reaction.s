@@ -15,127 +15,130 @@
         RSEG    CSTACK                  ; pre-declaration of segment
         RSEG    CODE                    ; place program in 'CODE' segment
  
-init:   MOV     #SFE(CSTACK), SP        ; set up stack
-        MOV     #100, R11               ; pseudorandomiser initialisation
-        MOV     #0, R3                  ; clearing potential dump data stored in variables
-        MOV     #0, R4
-        MOV     #0, R5
-        MOV     #0, R6
-        MOV     #0, R7
-        MOV     #0, R8
-        MOV     #0, R9
-        MOV     #0, R10             
-        MOV     #0, R12
-        MOV     #0, R13
-        MOV     #0, R14
-        MOV     #0, R15
+init:   mov     #SFE(CSTACK), SP        ; set up stack
+        mov     #100, R11               ; pseudorandomiser initialisation
+        mov     #0, R3                  ; clearing potential dump data stored in registers
+        mov     #0, R4
+        mov     #0, R5
+        mov     #0, R6
+        mov     #0, R7
+        mov     #0, R8
+        mov     #0, R9
+        mov     #0, R10             
+        mov     #0, R12
+        mov     #0, R13
+        mov     #0, R14
+        mov     #0, R15
  
-main:   NOP                             ; main program
-        MOV.W   #WDTPW+WDTHOLD, &WDTCTL ; Stop watchdog timer
+main:   nop                             ; main program
+        mov.w   #WDTPW+WDTHOLD, &WDTCTL ; Stop watchdog timer
         
         mov.w   #800, &TACCR0           ; Period for up mode = ~ 0.01 s
         mov.w   #CCIE, &TACCTL1         ; Enable interrupts on Compare 0
-        BIS.B   #0xFF, &P2DIR           ; set P2 as output
-        MOV.B   #FFh, P2OUT             ; set the output to 0xFF to make sure the display is off
+        bis.b   #0xFF, &P2DIR           ; set P2 as output
+        mov.b   #FFh, P2OUT             ; set the output to 0xFF to make sure the display is off
  
         ; Set up Timer A. Up mode, divide clock by 8, clock from SMCLK, clear TAR
         mov.w   #MC_1|ID_3|TASSEL_2|TACLR, &TACTL
         
-        MOV.B   #1111b, P1IE            ; P1.3 interrupt enabled
-        MOV.B   #1111b, P1IES           ; P1.3 Hi/lo edge
-        BIC.B   #1111b, P1IFG           ; IFG cleared
+        mov.b   #1111b, P1IE            ; P1.3 interrupt enabled
+        mov.b   #1111b, P1IES           ; P1.3 Hi/lo edge
+        bic.b   #1111b, P1IFG           ; IFG cleared
         bis.w   #GIE, SR                ; Enable interrupts (just TACCR0)
  
-        JMP $                           ; jump to current location '$'
+        jmp     $                       ; jump to current location '$'
                                         ; (endless loop)
 
-; PORT1 interrupt responsible for handling the buttons
-PORT1_isr:
-        CMP.B   #1, R15 ; if currently busy, skip the interrupt
-        JZ      currently_busy
-        MOV.B   P4IN, R10 ; take the input from buttons
-        MOV     #0, R12 ; clear dump variables from previous state
-        MOV     #0, R13
-        MOV.B   #00000010b, R12 ; check for INIT state      
-        AND.B   R10, R12
-        MOV.B   #00000001b, R13 ; check for STOP state
-        AND.B   R10, R13
+PORT1_isr:                              ; PORT1 interrupt responsible for handling the buttons
+        cmp.b   #1, R15                 ; if currently busy, skip the interrupt
+        jz      currently_busy
+        mov.b   P4IN, R10               ; take the input from buttons
+        mov     #0, R12                 ; clear dump variables from previous state
+        mov     #0, R13
+        mov.b   #00000010b, R12         ; check for INIT state      
+        and.b   R10, R12
+        mov.b   #00000001b, R13         ; check for STOP state
+        and.b   R10, R13
 currently_busy:
-        BIC.B   #1111b, P1IFG ; IFG cleared
-        RETI
+        bic.b   #1111b, P1IFG           ; IFG cleared
+        reti
 
 ; counter stored in R14 register (later forwarded to R4 to correctly process the output)
 ; pseudorandomiser stored in R11 register
 TIMER_A1_Interrupt: 
-        CMP     #1, R15 ; if busy flag set
-        JNZ     not_busy
-        DEC     R8 ; decrement the stored random value
-        CMP     #0, R8 ; if the stored random value reaches 0
-        JNZ     routine ; skip the rest of logic while still waiting for the light
-        MOV.B   #0, R15 ; clear the busy flag
-        MOV.B   #1, R9 ; set the calc_time flag
-        JMP     routine
+        cmp     #1, R15                 ; if busy flag set
+        jnz     not_busy
+        dec     R8                      ; decrement the stored random value
+        cmp     #0, R8                  ; if the stored random value reaches 0
+        jnz     routine                 ; skip the rest of logic while still waiting for the light
+        mov.b   #0, R15                 ; clear the busy flag
+        mov.b   #1, R9                  ; set the calc_time flag
+        jmp     routine
 not_busy:
-        CMP     #00000010b, R12 ; if INIT state reached
-        JNZ     skip_init ; if not then skip starting procedure
-        MOV.B   #FFh, P2OUT ; set the output to 0xFF to clear the display
-        MOV.B   R11, R8 ; store a random value in R8
-        MOV.B   #1, R15 ; set the busy flag
-        CLR     R12 ; clear the INIT state after handled
+        cmp     #00000010b, R12         ; if INIT state reached
+        jnz     skip_init               ; if not then skip starting procedure
+        mov.b   #FFh, P2OUT             ; set the output to 0xFF to clear the display
+        mov.b   R11, R8                 ; store a random value in R8
+        mov.b   #1, R15                 ; set the busy flag
+        clr     R12                     ; clear the INIT state after handled
 skip_init:
-        CMP     #00000001b, R13 ; if STOP state received
-        JNZ     routine ; if not then skip displaying the time logic
-        CMP     #100, R3 ; if the user was slower than a second
-        JLO     fast_enough ; skip if the user wasn't too slow
-        MOV.B   #99, R3 ; set the display time to 0.99 sec if the user was too slow
+        cmp     #00000001b, R13         ; if STOP state received
+        jnz     routine                 ; if not then skip displaying the time logic
+        cmp     #100, R3                ; if the user was slower than a second
+        jlo     fast_enough             ; skip if the user wasn't too slow
+        mov.b   #99, R3                 ; set the display time to 0.99 sec if the user was too slow
 fast_enough:
-        MOV     R3, R4 ; move the timer to be displayed
-        CALL    #nkb2bcd ; convert the value to 7 segment display
-        CLR     R9 ; clear the calc_time flag after handled
-routine: ; mostly handles pseudorandomiser logic
-        INC     R11 ; always increment the pseudorandomiser
-        CMP     #1, R9 ; if calc_time flag is set
-        JNZ     skip_calc_time ; if not then skip
-        INC     R3 ; calculate the time
+        mov     R3, R4                  ; move the timer to be displayed
+        call    #nkb2bcd                ; convert the value to 7 segment display
+        clr     R9                      ; clear the calc_time flag after handled
+routine:                                ; mostly handles pseudorandomiser logic
+        inc     R11                     ; always increment the pseudorandomiser
+        cmp     #1, R9                  ; if calc_time flag is set
+        jnz     skip_calc_time          ; if not then skip
+        inc     R3                      ; calculate the time
 skip_calc_time:
-        CMP     #600, R11 ; if the randomiser reaches 6 secs (logic that handles 1 - 6 sec range)
-        JNZ     skip_rand_reset ; if not then skip
-        MOV.B   #100, R11 ; reset the randomiser to 1 sec
+        cmp     #600, R11               ; if the randomiser reaches 6 secs (logic that handles 1 - 6 sec range)
+        jnz     skip_rand_reset         ; if not then skip
+        mov.b   #100, R11               ; reset the randomiser to 1 sec
 skip_rand_reset:
-        BIC     #CCIFG, &TACCTL1        
-        RETI
+        bic     #CCIFG, &TACCTL1        
+        reti
 
 ; function that converts hex number to 7 segment display fixing the issues with displaying hex 0xA-F digits
 ; R4 - number to convert
 ; used registers: R4, R5, R6, R7
 ; source: https://monjino.atlassian.net/wiki/spaces/TM/pages/1210482707/Lab+4.+wiczenie
 nkb2bcd:
-        PUSH R4 ; temporarily store the number in stack
-        PUSH R5
-        PUSH R6
-        PUSH R7
-        MOV #0, R7
-        MOV #0, R5
-        MOV R4, R6
+        push    R4                      ; temporarily store the number in stack
+        push    R5
+        push    R6
+        push    R7
+        mov     #0, R7
+        mov     #0, R5
+        mov     R4, R6
 decimal_loop:
-        CMP #10, R6
-        JNC display
-        ADD #10, R5
-        INC R7
-        SUB #10, R6
-        JMP decimal_loop     
+        cmp     #10, R6
+        jnc     display
+        add     #10, R5
+        inc     R7
+        sub     #10, R6
+        jmp     decimal_loop     
 display:        
-        SUB R5, R4
-        RLA R7
-        RLA R7
-        RLA R7
-        RLA R7
-        ADD R7, R4
-        MOV.B R4, P2OUT ; move processed value to output
-        POP R7 ; clearing the stack
-        POP R6
-        POP R5
-        POP R4
-        RET
+        sub     R5, R4
+        rla     R7
+        rla     R7
+        rla     R7
+        rla     R7
+        add     R7, R4
+        cmp     #A0h, R4                ; upon reaching 100 (which is hex 0xA0 after conversion)
+        jz      skip_count_reset        ; if not then skip
+        mov     #0, R4                  ; reset the counter
+skip_count_reset:
+        mov.b   R4, P2OUT
+        pop     R7                      ; clearing the stack
+        pop     R6
+        pop     R5
+        pop     R4
+        ret
         
         END

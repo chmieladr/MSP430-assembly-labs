@@ -15,109 +15,108 @@
         RSEG    CSTACK                  ; pre-declaration of segment
         RSEG    CODE                    ; place program in 'CODE' segment
  
-init:   MOV     #SFE(CSTACK), SP        ; set up stack
-        MOV     #0, R4                  ; clearing potential dump data stored in variables
-        MOV     #0, R5
-        MOV     #0, R6
-        MOV     #0, R7
-        MOV     #0, R10             
-        MOV     #0, R11
-        MOV     #0, R12
-        MOV     #0, R13
-        MOV     #0, R14
+init:   mov     #SFE(CSTACK), SP        ; set up stack
+        mov     #0, R4                  ; clearing potential dump data stored in variables
+        mov     #0, R5
+        mov     #0, R6
+        mov     #0, R7
+        mov     #0, R10             
+        mov     #0, R11
+        mov     #0, R12
+        mov     #0, R13
+        mov     #0, R14
  
-main:   NOP                             ; main program
-        MOV.W   #WDTPW+WDTHOLD, &WDTCTL ; Stop watchdog timer
+main:   nop                             ; main program
+        mov.w   #WDTPW+WDTHOLD, &WDTCTL ; Stop watchdog timer
         
         mov.w   #65535, &TACCR0         ; Period for up mode
         mov.w   #CCIE, &TACCTL1         ; Enable interrupts on Compare 0
-        BIS.B   #0xFF, &P2DIR           ; Set P2 to output
-        MOV.B   0, P2OUT                ; Clear the dump data in output
+        bis.b   #0xFF, &P2DIR           ; Set P2 to output
+        mov.b   0, P2OUT                ; Clear the dump data in output
 
         ; Set up Timer A. Up mode, divide clock by 8, clock from SMCLK, clear TAR
         mov.w   #MC_1|ID_3|TASSEL_2|TACLR, &TACTL
         
-        MOV.B   #1111b, P1IE            ; P1.3 interrupt enabled
-        MOV.B   #1111b, P1IES           ; P1.3 Hi/lo edge
-        BIC.B   #1111b, P1IFG           ; IFG cleared
+        mov.b   #1111b, P1IE            ; P1.3 interrupt enabled
+        mov.b   #1111b, P1IES           ; P1.3 Hi/lo edge
+        bic.b   #1111b, P1IFG           ; IFG cleared
         bis.w   #GIE, SR                ; Enable interrupts (just TACCR0)
  
-        JMP $                           ; jump to current location '$'
+        jmp     $                       ; jump to current location '$'
                                         ; (endless loop)
 
-; PORT1 interrupt responsible for handling the buttons
-PORT1_isr:
-        MOV.B   P4IN, R10 ; take the input from buttons
-        MOV     #0, R11 ; clear dump variables from previous state
-        MOV     #0, R12
-        MOV     #0, R13
-        MOV.B   #00000100b, R11 ; check for START state
-        AND.B   R10, R11
-        MOV.B   #00000010b, R12 ; check for STOP state      
-        AND.B   R10, R12
-        MOV.B   #00000001b, R13 ; check for RESET state
-        AND.B   R10, R13
-        BIC.B   #1111b, P1IFG ; IFG cleared
+PORT1_isr:                              ; PORT1 interrupt responsible for handling the buttons
+        mov.b   P4IN, R10               ; take the input from buttons
+        mov     #0, R11                 ; clear dump variables from previous state
+        mov     #0, R12
+        mov     #0, R13
+        mov.b   #00000100b, R11         ; check for START state
+        and.b   R10, R11
+        mov.b   #00000010b, R12         ; check for STOP state      
+        and.b   R10, R12
+        mov.b   #00000001b, R13         ; check for RESET state
+        and.b   R10, R13
+        bic.b   #1111b, P1IFG           ; IFG cleared
         RETI
 
 ; counter stored in R14 register (later forwarded to R4 to correctly process the output)
 TIMER_A1_Interrupt:
-        CMP     #00000001b, R13 ; if RESET state received
-        JZ      skip_reset ; if not then skip
-        CLR     R14 ; clear the counter
-        MOV     #0, R13 ; clear the RESET state
+        cmp     #00000001b, R13         ; if RESET state received
+        jz      skip_reset              ; if not then skip
+        clr     R14                     ; clear the counter
+        mov     #0, R13                 ; clear the RESET state
 skip_reset:
-        CMP     #00000010b, R12 ; if STOP state reached
-        JZ      skip_decr ; if not then skip the decrementation
-        DEC     R14 ; decrement the counter (INC along with DEC results in no changes)
-        JMP     routine
+        cmp     #00000010b, R12         ; if STOP state reached
+        jz      skip_decr               ; if not then skip the decrementation
+        dec     R14                     ; decrement the counter (INC along with DEC results in no changes)
+        jmp     routine
 skip_decr:
-        CMP     #00000100b, R11 ; if START state received
-        JNZ     routine ; if not then skip clearing the states
-        CLR     R12 ; upon starting, clear the STOP state
-        CLR     R11 ; and the START state since it has already started
+        cmp     #00000100b, R11         ; if START state received
+        jnz     routine                 ; if not then skip clearing the states
+        clr     R12                     ; upon starting, clear the STOP state
+        clr     R11                     ; and the START state since it has already started
 routine:
-        INC     R14 ; always increment (even if it's stopped)
-        MOV.B   R14, R4 ; moving the value of counter to be displayed
-        call    #nkb2bcd ; convert that value to 7 segment display
-        BIC     #CCIFG, &TACCTL1        
-        RETI
+        inc     R14                     ; always increment (even if it's stopped)
+        mov.b   R14, R4                 ; moving the value of counter to be displayed
+        call    #nkb2bcd                ; convert that value to 7 segment display
+        bic     #CCIFG, &TACCTL1        
+        reti
 
 ; function that converts hex number to 7 segment display fixing the issues with displaying hex 0xA-F digits
 ; R4 - number to convert
 ; used registers: R4, R5, R6, R7
 ; source: https://monjino.atlassian.net/wiki/spaces/TM/pages/1210482707/Lab+4.+wiczenie
 nkb2bcd:
-        PUSH R4 ; temporarily store the number in stack
-        PUSH R5
-        PUSH R6
-        PUSH R7
-        MOV #0, R7
-        MOV #0, R5
-        MOV R4, R6
+        push    R4                      ; temporarily store the number in stack
+        push    R5
+        push    R6
+        push    R7
+        mov     #0, R7
+        mov     #0, R5
+        mov     R4, R6
 decimal_loop:
-        CMP #10, R6
-        JNC display
-        ADD #10, R5
-        INC R7
-        SUB #10, R6
-        JMP decimal_loop     
+        cmp     #10, R6
+        jnc     display
+        add     #10, R5
+        inc     R7
+        sub     #10, R6
+        jmp     decimal_loop     
 display:        
-        SUB R5, R4
-        RLA R7
-        RLA R7
-        RLA R7
-        RLA R7
-        ADD R7, R4
-        CMP #A0h, R4 ; upon reaching 100 (which is 0xA0 after conversion)
-        JZ skip_count_reset ; if not then skip
-        MOV #0, R4 ; reset the counter
+        sub     R5, R4
+        rla     R7
+        rla     R7
+        rla     R7
+        rla     R7
+        add     R7, R4
+        cmp     #A0h, R4                ; upon reaching 100 (which is hex 0xA0 after conversion)
+        jz      skip_count_reset        ; if not then skip
+        mov     #0, R4                  ; reset the counter
 skip_count_reset:
-        MOV.B R4, P2OUT
-        POP R7 ; clearing the stack
-        POP R6
-        POP R5
-        POP R4
-        RET
+        mov.b   R4, P2OUT
+        pop     R7                      ; clearing the stack
+        pop     R6
+        pop     R5
+        pop     R4
+        ret
         
         END

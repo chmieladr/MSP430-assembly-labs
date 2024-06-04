@@ -2,15 +2,16 @@
 Project that contains my entire code written in *Assembly MSP430*. Tested on *MSP430F169* microcontroller. Might contain mistakes. Based on knowledge found in:
 * [Microprocessor Technology Blog by Kamil Możdżyński](https://monjino.atlassian.net/wiki/spaces/TM/overview?homepageId=1077051583)
 * Documentary _PDF_ files available in `docs` directory:
+    * `Blocks_scheme.pdf`
     * `msp430f169.pdf`
     * `slau049f.pdf`
+
+> **Note!** If you just want to have a look at the code, it is recommended to use
+  **_MSP430 Assembly_** extention in _Visual Studio Code_ that will (at least partially) highlight the code for you! 
 
 ## Main files
 Here's a quick recap of what each project file contains. 
 > It is highly recommended to have a look at all comments since they might significantly help you with understanding this entire messy code.
-
-#### Lab0.s
-- 
 
 #### Lab1.s
 - 
@@ -29,6 +30,15 @@ Here's a quick recap of what each project file contains.
 
 #### timer.s
 -
+
+#### triangle.s
+-
+
+#### adc.s
+-
+
+#### mean_filter.s
+- 
 
 ### Utilities
 This section contains other useful programmes that helped with preparing the code for files visible above.
