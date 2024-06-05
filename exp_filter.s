@@ -1,7 +1,7 @@
 #include "msp430.h"                     ; #define controlled include file
  
         NAME    main                    ; module name
- 
+
         PUBLIC  main                    ; make the main label vissible
                                         ; outside this module
         ORG     0FFECh
@@ -11,17 +11,14 @@
  
         RSEG    CSTACK                  ; pre-declaration of segment
         RSEG    CODE                    ; place program in 'CODE' segment
- 
+
 init:   mov     #SFE(CSTACK), SP        ; set up stack
-        
-; DAC_P2 config
-        bis.b   #00010000b, &P1DIR      ; set P1.4 as out
-        bis.b   #10000000b, &P5DIR      ; set P5.7 as out
-        bic.b   #00010000b, &P1OUT      ; clear bit P1.4
-        bic.b   #10000000b, &P5OUT      ; clear bit P5.7
         mov.b   #255, P2DIR             ; set all pins from port 2 as outputs
         mov.b   #0, P2OUT               ; set port 2 to low
 
+        ; Alpha initialization
+        mov     2, R4                   ; possible values: {0: 0, 1: 1/4, 2: 1/2, 3: 3/4, 4: 1}
+ 
 ; ADC config (based on documentation)
         bis.w   #0000100011110000b, &ADC12CTL0
         ; SHT0 = 1000b (256 cycles) | MSC = 1 | REF2_5V = 1 | REFON = 1 | ADC12ON = 1
@@ -94,10 +91,68 @@ Mainloop:
         jmp     $                       ; jump to current location '$'                                       
                                         ; (endless loop)
  
-TIMER_A0_Interrupt:
-        mov.w   &ADC12MEM0, R5          ; moving the value from ADC to R5
-        mov     R5, &DAC12_1DAT         ; moving that value to converter DAC_1 
-        mov.b   R5, &P2OUT              ; moving that value to converter DAC_2
-        reti
+TIMER_A0_Interrupt:                     ; R6 = x_n-1 | R5 = x_n | R4 = alpha 
+        mov     R5, R6                  ; copy previous value to R6
+        mov     &ADC12MEM0, R5          ; read ADC value
+        clr     R7                      ; clear previous result
+        
+        cmp     #0, R4                  ; if alpha == 0
+        jeq     alpha0                  ; jump to alpha0
+        cmp     #1, R4                  ; if alpha == 1/4
+        jeq     alpha1                  ; jump to alpha1
+        cmp     #2, R4                  ; if alpha == 1/2
+        jeq     alpha2                  ; jump to alpha2
+        cmp     #3, R4                  ; if alpha == 3/4
+        jeq     alpha3                  ; jump to alpha3
+        cmp     #4, R4                  ; if alpha == 1
+        jeq     alpha4                  ; jump to alpha4
+        jmp     finish                  ; jump to finish if alpha invalid
+
+alpha0:                                 ; alpha = 0 (delayed by 1 sample)
+        mov     R6, R7                  ; y(n) = x_n-1
+        jmp     finish                  ; jump to finish
+
+alpha1:                                 ; alpha = 1/4
+        mov     R5, R8                  ; a = x_n
+        rra     R8                      ; a = x_n / 2
+        rra     R8                      ; a = x_n / 4
+        mov     R6, R9                  ; b = x_n-1
+        rra     R9                      ; b = x_n-1 / 2
+        rra     R9                      ; b = x_n-1 / 4
+        add     R8, R7                  ; y(n) = a | y(n) = x_n / 4
+        add     R9, R7                  ; y(n) = a + b  | y(n) = x_n / 4 + x_n-1 / 4
+        add     R9, R7                  ; y(n) = a + 2b | y(n) = x_n / 4 + x_n-1 * 2 / 4
+        add     R9, R7                  ; y(n) = a + 3b | y(n) = x_n / 4 + x_n-1 * 3 / 4
+        jmp     finish                  ; jump to finish
+
+alpha2:                                 ; alpha = 1/2
+        mov     R5, R8                  ; a = x_n
+        rra     R8                      ; a = x_n / 2
+        mov     R6, R9                  ; b = x_n-1
+        rra     R9                      ; b = x_n-1 / 2
+        add     R8, R7                  ; y(n) = a     | y(n) = x_n / 2
+        add     R9, R7                  ; y(n) = a + b | y(n) = x_n / 2 + x_n-1 / 2
+        jmp     finish                  ; jump to finish
+
+alpha3:                                 ; alpha = 3/4
+        mov     R5, R8                  ; a = x_n
+        rra     R8                      ; a = x_n / 2
+        rra     R8                      ; a = x_n / 4
+        mov     R6, R9                  ; b = x_n-1
+        rra     R9                      ; b = x_n-1 / 2
+        rra     R9                      ; b = x_n-1 / 4
+        add     R8, R7                  ; y(n) = a      | y(n) = x_n / 4
+        add     R8, R7                  ; y(n) = 2a     | y(n) = x_n * 2 / 4
+        add     R8, R7                  ; y(n) = 3a     | y(n) = x_n * 3 / 4
+        add     R9, R7                  ; y(n) = 3a + b | y(n) = x_n * 3 / 4 + x_n-1 / 4
+        jmp     finish                  ; jump to finish
+
+alpha4:                                 ; alpha = 1 (no change)
+        mov     R5, R7                  ; y(n) = x_n
+        jmp     finish                  ; jump to finish
+
+finish:
+        mov     R7, &DAC12_1DAT         ; move result to display register
+        reti                            ; return from interrupt
  
-        end
+        END

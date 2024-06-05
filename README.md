@@ -1,5 +1,7 @@
 # MSP430
-Project that contains my entire code written in *Assembly MSP430*. Tested on *MSP430F169* microcontroller. Might contain mistakes. Based on knowledge found in:
+Repository that contains my entire code written in *Assembly MSP430*. Tested on *MSP430F169* microcontroller. **Might contain mistakes!**
+
+## Sources
 * [Microprocessor Technology Blog by Kamil Możdżyński](https://monjino.atlassian.net/wiki/spaces/TM/overview?homepageId=1077051583)
 * Documentary _PDF_ files available in `docs` directory:
     * `Blocks_scheme.pdf`
@@ -39,6 +41,9 @@ Here's a quick recap of what each project file contains.
 
 #### mean_filter.s
 - 
+
+#### exp_filter.s
+-
 
 ### Utilities
 This section contains other useful programmes that helped with preparing the code for files visible above.

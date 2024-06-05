@@ -149,6 +149,6 @@ display_val:
         mov     R9, &DAC12_1DAT         ; moving the filtered value to converter DAC_1
 
 finish:
-        reti                           ; return from interrupt (finally done with this iteration)
+        reti                            ; return from interrupt (finally done with this iteration)
  
         END
