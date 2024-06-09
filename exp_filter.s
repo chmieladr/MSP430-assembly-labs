@@ -1,7 +1,7 @@
 #include "msp430.h"                     ; #define controlled include file
  
         NAME    main                    ; module name
-
+ 
         PUBLIC  main                    ; make the main label vissible
                                         ; outside this module
         ORG     0FFECh
@@ -11,13 +11,14 @@
  
         RSEG    CSTACK                  ; pre-declaration of segment
         RSEG    CODE                    ; place program in 'CODE' segment
-
+ 
 init:   mov     #SFE(CSTACK), SP        ; set up stack
         mov.b   #255, P2DIR             ; set all pins from port 2 as outputs
         mov.b   #0, P2OUT               ; set port 2 to low
-
-        ; Alpha initialization
-        mov     2, R4                   ; possible values: {0: 0, 1: 1/4, 2: 1/2, 3: 3/4, 4: 1}
+        mov     #011111111111b, R7      ; first y_n-1 initialization
+ 
+; Alpha initialization
+        mov     #0, R4                  ; possible values: {0: 0, 1: 1/4, 2: 1/2, 3: 3/4, 4: 1}
  
 ; ADC config (based on documentation)
         bis.w   #0000100011110000b, &ADC12CTL0
@@ -81,7 +82,7 @@ BCM1    dec     R15                     ; delay
  
 main:   nop                             ; main program
         mov.w   #WDTPW+WDTHOLD, &WDTCTL ; Stop watchdog timer
-        mov.w   #0x5, &TACCR0           ; Period for up mode
+        mov.w   #0x160, &TACCR0         ; Period for up mode
         mov.w   #CCIE, &TACCTL0         ; Enable interrupts on Compare 0
         mov.w   #MC_1|ID_3|TASSEL_2|TACLR, &TACTL
         bis.w   #GIE, SR                ; Enable interrupts (just TACCR0)
@@ -91,11 +92,10 @@ Mainloop:
         jmp     $                       ; jump to current location '$'                                       
                                         ; (endless loop)
  
-TIMER_A0_Interrupt:                     ; R6 = x_n-1 | R5 = x_n | R4 = alpha 
-        mov     R5, R6                  ; copy previous value to R6
+TIMER_A0_Interrupt:                     ; R6 = y_n-1 | R5 = x_n | R4 = alpha 
+        mov     R7, R6                  ; copy previous value to R6
         mov     &ADC12MEM0, R5          ; read ADC value
         clr     R7                      ; clear previous result
-        
         cmp     #0, R4                  ; if alpha == 0
         jeq     alpha0                  ; jump to alpha0
         cmp     #1, R4                  ; if alpha == 1/4
@@ -108,43 +108,43 @@ TIMER_A0_Interrupt:                     ; R6 = x_n-1 | R5 = x_n | R4 = alpha
         jeq     alpha4                  ; jump to alpha4
         jmp     finish                  ; jump to finish if alpha invalid
 
-alpha0:                                 ; alpha = 0 (delayed by 1 sample)
-        mov     R6, R7                  ; y(n) = x_n-1
+alpha0:                                 ; alpha = 0 (copy previous output)
+        mov     R6, R7                  ; y(n) = y_n-1
         jmp     finish                  ; jump to finish
 
 alpha1:                                 ; alpha = 1/4
         mov     R5, R8                  ; a = x_n
         rra     R8                      ; a = x_n / 2
         rra     R8                      ; a = x_n / 4
-        mov     R6, R9                  ; b = x_n-1
-        rra     R9                      ; b = x_n-1 / 2
-        rra     R9                      ; b = x_n-1 / 4
+        mov     R6, R9                  ; b = y_n-1
+        rra     R9                      ; b = y_n-1 / 2
+        rra     R9                      ; b = y_n-1 / 4
         add     R8, R7                  ; y(n) = a | y(n) = x_n / 4
-        add     R9, R7                  ; y(n) = a + b  | y(n) = x_n / 4 + x_n-1 / 4
-        add     R9, R7                  ; y(n) = a + 2b | y(n) = x_n / 4 + x_n-1 * 2 / 4
-        add     R9, R7                  ; y(n) = a + 3b | y(n) = x_n / 4 + x_n-1 * 3 / 4
+        add     R9, R7                  ; y(n) = a + b  | y(n) = x_n / 4 + y_n-1 / 4
+        add     R9, R7                  ; y(n) = a + 2b | y(n) = x_n / 4 + y_n-1 * 2 / 4
+        add     R9, R7                  ; y(n) = a + 3b | y(n) = x_n / 4 + y_n-1 * 3 / 4
         jmp     finish                  ; jump to finish
 
 alpha2:                                 ; alpha = 1/2
         mov     R5, R8                  ; a = x_n
         rra     R8                      ; a = x_n / 2
-        mov     R6, R9                  ; b = x_n-1
-        rra     R9                      ; b = x_n-1 / 2
+        mov     R6, R9                  ; b = y_n-1
+        rra     R9                      ; b = y_n-1 / 2
         add     R8, R7                  ; y(n) = a     | y(n) = x_n / 2
-        add     R9, R7                  ; y(n) = a + b | y(n) = x_n / 2 + x_n-1 / 2
+        add     R9, R7                  ; y(n) = a + b | y(n) = x_n / 2 + y_n-1 / 2
         jmp     finish                  ; jump to finish
 
 alpha3:                                 ; alpha = 3/4
         mov     R5, R8                  ; a = x_n
         rra     R8                      ; a = x_n / 2
         rra     R8                      ; a = x_n / 4
-        mov     R6, R9                  ; b = x_n-1
-        rra     R9                      ; b = x_n-1 / 2
-        rra     R9                      ; b = x_n-1 / 4
+        mov     R6, R9                  ; b = y_n-1
+        rra     R9                      ; b = y_n-1 / 2
+        rra     R9                      ; b = y_n-1 / 4
         add     R8, R7                  ; y(n) = a      | y(n) = x_n / 4
         add     R8, R7                  ; y(n) = 2a     | y(n) = x_n * 2 / 4
         add     R8, R7                  ; y(n) = 3a     | y(n) = x_n * 3 / 4
-        add     R9, R7                  ; y(n) = 3a + b | y(n) = x_n * 3 / 4 + x_n-1 / 4
+        add     R9, R7                  ; y(n) = 3a + b | y(n) = x_n * 3 / 4 + y_n-1 / 4
         jmp     finish                  ; jump to finish
 
 alpha4:                                 ; alpha = 1 (no change)
