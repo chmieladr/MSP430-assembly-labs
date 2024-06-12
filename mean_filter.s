@@ -19,9 +19,10 @@ init:   mov     #SFE(CSTACK), SP        ; set up stack
         mov.b   #0, P2OUT               ; set port 2 to low
  
 ; Buffer initialization (and helper pointers)
-        mov     #0, R4                  ; R4 = 0 | initialization of buffer pointer (moves by 2)
-        mov     #128, R5                ; R5 = 128 | current number of non-assigned slots in the buffer
-        mov     #0, R12                 ; R12 = 0 | current position in the buffer (moves by 1)
+        clr     R4                      ; R4 = 0 | initialization of buffer pointer (moves by 2)
+        mov     #128, R6                ; R6 - amount of samples (don't forget to adjust the amount of rra's later)
+        mov     R6, R5                  ; R5 = R6 | current number of non-assigned slots in the buffer
+        clr     R12                     ; R12 = 0 | current position in the buffer (moves by 1)
  
 ; ADC config (based on documentation)
         bis.w   #0000100011110000b, &ADC12CTL0
@@ -29,8 +30,8 @@ init:   mov     #SFE(CSTACK), SP        ; set up stack
         bis.w   #0000001000000010b, &ADC12CTL1
         ; SHP = 1 | CONSEQ2 = 1 -> A1 goes to MEM0
         bis.b   #00000001b, &ADC12MCTL0 ; set input channel as A1
-        bis.b   #10b, &P6SEL ; set P6.1 as analog input
-        bis.w   #11b, &ADC12CTL0 ; has to be at the end
+        bis.b   #10b, &P6SEL            ; set P6.1 as analog input
+        bis.w   #11b, &ADC12CTL0        ; has to be at the end
         ; ENC = 1 | ADC12SC = 1 -> enables and starts conversion
  
 ; Basic Clock Module Initialisation
@@ -95,7 +96,7 @@ Mainloop:
         jmp     $                       ; jump to current location '$'                                       
                                         ; (endless loop)
  
-TIMER_A0_Interrupt:                     ; adjusted for 128 samples
+TIMER_A0_Interrupt:                     ; adjusted for 128 samples (initialised as R6)
         clr     R9                      ; clearing the previous filtered mean value
         clr     R13                     ; clearing the previous summing position
  
@@ -111,7 +112,7 @@ TIMER_A0_Interrupt:                     ; adjusted for 128 samples
  
 filter:
         clr     R5                      ; neutralize the decrementation earlier (for lack of non-assigned slots)
-        cmp     #128, R12               ; check if end of buffer is reached
+        cmp     R6, R12                 ; check if end of buffer is reached
         jeq     anti_overflow           ; if yes, move the pointers back to beginning (anti-overflow mechanism)
         jmp     sum_loop                ; else, go straight to displaying filtered value
  
@@ -137,7 +138,7 @@ sum_loop:
         add     #2, R8                  ; move the buffer pointer
         inc     R13                     ; increase the position in the buffer (for summing)
  
-        cmp     #128, R13               ; check if entire buffer was summed
+        cmp     R6, R13                 ; check if entire buffer was summed
         jeq     display_val             ; if yes, go to the displaying the value
         jmp     sum_loop                ; else, go to the next iteration
  

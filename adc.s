@@ -28,8 +28,8 @@ init:   mov     #SFE(CSTACK), SP        ; set up stack
         bis.w   #0000001000000010b, &ADC12CTL1
         ; SHP = 1 | CONSEQ2 = 1 -> A1 goes to MEM0
         bis.b   #00000001b, &ADC12MCTL0 ; set input channel as A1
-        bis.b   #10b, &P6SEL ; set P6.1 as analog input
-        bis.w   #11b, &ADC12CTL0 ; has to be at the end
+        bis.b   #10b, &P6SEL            ; set P6.1 as analog input
+        bis.w   #11b, &ADC12CTL0        ; has to be at the end
         ; ENC = 1 | ADC12SC = 1 -> enables and starts conversion
  
 ; Basic Clock Module Initialisation
