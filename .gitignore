@@ -10,6 +10,3 @@
 *.synctex(busy)
 *.synctex.gz
 *.toc
-
-# Ignore "to-do" list
-todo.md

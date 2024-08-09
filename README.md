@@ -15,6 +15,8 @@ Repository that contains my entire code written in *Assembly MSP430*. Tested on 
 Here's a quick recap of what each project file contains. 
 > It is highly recommended to have a look at all comments since they might significantly help you with understanding this entire messy code.
 
+> The part below is still in work!
+
 #### Lab1.s
 - 
 

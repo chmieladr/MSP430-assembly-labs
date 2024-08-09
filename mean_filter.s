@@ -20,7 +20,7 @@ init:   mov     #SFE(CSTACK), SP        ; set up stack
  
 ; Buffer initialization (and helper pointers)
         clr     R4                      ; R4 = 0 | initialization of buffer pointer (moves by 2)
-        mov     #128, R6                ; R6 - amount of samples (don't forget to adjust the amount of rra's later)
+        mov     #64, R6                 ; R6 - amount of samples (don't forget to adjust the amount of rra's later)
         mov     R6, R5                  ; R5 = R6 | current number of non-assigned slots in the buffer
         clr     R12                     ; R12 = 0 | current position in the buffer (moves by 1)
  
@@ -86,7 +86,7 @@ BCM1    dec     R15                     ; delay
  
 main:   nop                             ; main program
         mov.w   #WDTPW+WDTHOLD, &WDTCTL ; Stop watchdog timer
-        mov.w   #0x180, &TACCR0         ; Period for up mode
+        mov.w   #0x20, &TACCR0          ; Period for up mode
         mov.w   #CCIE, &TACCTL0         ; Enable interrupts on Compare 0
         mov.w   #MC_1|ID_3|TASSEL_2|TACLR, &TACTL
         bis.w   #GIE, SR                ; Enable interrupts (just TACCR0)
@@ -96,7 +96,7 @@ Mainloop:
         jmp     $                       ; jump to current location '$'                                       
                                         ; (endless loop)
  
-TIMER_A0_Interrupt:                     ; adjusted for 128 samples (initialised as R6)
+TIMER_A0_Interrupt:                     ; adjusted for 64 samples (initialised as R6)
         clr     R9                      ; clearing the previous filtered mean value
         clr     R13                     ; clearing the previous summing position
  
@@ -111,14 +111,16 @@ TIMER_A0_Interrupt:                     ; adjusted for 128 samples (initialised 
         jmp     skip_filter             ; if there are still non-assigned slots, go to the next iteration
  
 filter:
-        clr     R5                      ; neutralize the decrementation earlier (for lack of non-assigned slots)
+        mov     #1, R5                  ; neutralize the decrementation earlier (for lack of non-assigned slots)
         cmp     R6, R12                 ; check if end of buffer is reached
         jeq     anti_overflow           ; if yes, move the pointers back to beginning (anti-overflow mechanism)
+        clr     R8                      ; set the buffer pointer to the beginning (for summing)
         jmp     sum_loop                ; else, go straight to displaying filtered value
  
 anti_overflow:
-        mov     0, R4                   ; reset the buffer pointer
+        clr     R4                      ; reset the buffer pointer
         clr     R12                     ; reset the position in the buffer
+        clr     R8                      ; set the buffer pointer to the beginning (for summing)
         jmp     sum_loop                ; go to displaying filtered value
  
 skip_filter:
@@ -128,11 +130,11 @@ skip_filter:
         jmp     finish                  ; return from interrupt
  
 sum_loop:
-        mov     0, R8                   ; set the buffer pointer to the beginning
         mov     BUFF(R8), R7            ; get the value from the buffer
-        rra     R7                      ; right shift x1 (increase or decrease the number of shifts for different amount of samples here)
-        rra     R7                      ; right shift x2
-        rra     R7                      ; right shift x3
+        rra     R7                      ; right shift x1 (32 samples)
+        rra     R7                      ; right shift x2 (64 samples)
+        ;rra     R7                      ; right shift x3 (128 samples)
+        ;rra     R7                      ; right shift x4 (256 samples)
         add     R7, R9                  ; adding the shifted value to sum (to avoid overflow)
  
         add     #2, R8                  ; move the buffer pointer
@@ -143,10 +145,10 @@ sum_loop:
         jmp     sum_loop                ; else, go to the next iteration
  
 display_val:
-        rra     R9                      ; right shift the sum x1
-        rra     R9                      ; right shift the sum x2
-        rra     R9                      ; right shift the sum x3
-        rra     R9                      ; right shift the sum x4
+        rra     R9                      ; right shift the sum x1 (2 samples)
+        rra     R9                      ; right shift the sum x2 (4 samples)
+        rra     R9                      ; right shift the sum x3 (8 samples)
+        rra     R9                      ; right shift the sum x4 (16 samples)
         mov     R9, &DAC12_1DAT         ; moving the filtered value to converter DAC_1
  
 finish:
