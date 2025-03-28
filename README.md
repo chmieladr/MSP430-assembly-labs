@@ -1,5 +1,7 @@
-# MSP430
-Repository that contains my entire code written in *Assembly MSP430*. Tested on *MSP430F169* microcontroller. **Might contain mistakes!**
+# MSP430 Assembly Labs
+Repository that contains my entire code written in *Assembly MSP430*. Tested on `MSP430F169` microcontroller. Prepared for "Microprocessors Technology" course as part of my major in Applied Computer Science at the Faculty of Electrical Engineering in Warsaw University of Technology.
+
+> **Note!** Might contain mistakes! This codebase is supposed to be more of an inspiration for your ideas and projects!
 
 ## Sources
 * [Microprocessor Technology Blog by Kamil Możdżyński](https://monjino.atlassian.net/wiki/spaces/TM/overview?homepageId=1077051583) -> _not publicly available anymore_
